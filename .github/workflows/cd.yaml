@@ -1,0 +1,40 @@
+name: CD Kubernetes Project (GitOps)
+
+on:
+  push:
+    branches:
+      - develop  # TODO: Test in main
+    paths:
+      - 'clusters/production/**'
+      - 'base/**'
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    environment: production # Define un entorno para la gestión de secretos
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: '1.28.0'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # Asegúrate de que coincida con tu terraform
+
+      - name: Get Kubeconfig for EKS
+        run: aws eks update-kubeconfig --name prod-eks-cluster --region us-east-1
+
+      - name: Apply Kubernetes manifests (GitOps)
+        run: scripts/ci-cd/apply-k8s.sh production # Aplica a producción
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/app1-deployment -n default
+          kubectl get pods -n default

@@ -1,0 +1,64 @@
+name: CI Kubernetes Project
+
+on:
+  pull_request:
+    branches:
+      - develop  # TODO: test in main
+    paths:
+      - 'clusters/**'
+      - 'base/**'
+      - 'scripts/ci-cd/**'
+
+jobs:
+  lint-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Kustomize
+        uses: kodermax/setup-kustomize@v3
+        with:
+          kustomize-version: '5.x.x' # o la versión que uses
+
+      - name: Setup Kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: '1.28.0' # o la versión que uses
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Install kubeconform
+        run: |
+          curl -L https://github.com/yannh/kubeconform/releases/download/v0.6.2/kubeconform-linux-amd64.tar.gz | tar -xz && sudo mv kubeconform /usr/local/bin/
+
+      - name: Run linting and validation script
+        run: scripts/ci-cd/lint-k8s.sh
+
+  terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.x.x' # o la versión que uses
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check -recursive
+        working-directory: terraform
+        continue-on-error: true
+
+      - name: Terraform init
+        id: init
+        run: terraform init
+        working-directory: terraform
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
+        working-directory: terraform

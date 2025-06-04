@@ -1,0 +1,29 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.rc
+override.tf
+override.tf.json
+plan.out
+.terraform-version
+
+# Kubernetes
+kubeconfig
+*.pem
+
+# IDEs and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Binaries
+*.exe
+*.bin
