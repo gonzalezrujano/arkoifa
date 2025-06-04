@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base/apps/arkoclient
+  # - ../../base/infra
+
+# patches:
+#   - path: services/deployment-app1-patch.yaml
+#     target:
+#       kind: Deployment
+#       name: app1-deployment
+#   - path: addons/cert-manager/release.yaml
+
+# helmCharts:
+#   - name: cert-manager
+#     repo: https://charts.jetstack.io
+#     version: v1.13.0
+#     releaseName: cert-manager
+#     namespace: cert-manager
+#     valuesFile: addons/cert-manager/values-prod.yaml
+
+#   - name: prometheus
+#     repo: https://prometheus-community.github.io/helm-charts
+#     version: 25.17.0
+#     releaseName: prometheus
+#     namespace: monitoring
+#     valuesFile: addons/prometheus/values-prod.yaml

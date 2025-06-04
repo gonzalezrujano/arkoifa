@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1-deployment
+  labels:
+    app: app1
+spec:
+  replicas: 1 # Valor predeterminado, será sobrescrito por los entornos
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+        - name: app1-container
+          image: my-registry/app1:latest # Imagen base, será sobrescrita
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "256Mi"
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+          env:
+            - name: ENV
+              value: "default" # Valor base, será sobrescrito
