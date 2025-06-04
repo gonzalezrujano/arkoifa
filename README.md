@@ -21,7 +21,7 @@ Make sure you have the following tools installed on your machine:
 * [Git](https://git-scm.com/downloads)
 
 ## Project Structure
-
+```
 arkoifa/
 ├── clusters/           # Environment-specific configurations (production, staging, dev)
 │   ├── production/
@@ -38,3 +38,4 @@ arkoifa/
 │   └── modules/        # Reusable Terraform modules
 ├── .github/            # GitHub Actions workflows (CI/CD)
 └── docs/               # Project documentation
+```
