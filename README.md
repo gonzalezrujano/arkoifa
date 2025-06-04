@@ -20,6 +20,28 @@ Make sure you have the following tools installed on your machine:
 * [aws-cli / az cli / gcloud cli](https://aws.amazon.com/cli/ / https://docs.microsoft.com/en-us/cli/azure/install-azure-cli / https://cloud.google.com/sdk/docs/install) (según tu proveedor de nube)
 * [Git](https://git-scm.com/downloads)
 
+## Quick Start (Development Local)
+
+To bootstrap a development cluster (e.g. Kind or Minikube) and deploy `app1`:
+
+1.  **Create a local cluster (e.g. Kind):**
+    ```bash
+    kind create cluster --name my-dev-cluster
+    kubectl cluster-info --context kind-my-dev-cluster
+    ```
+2.  **Apply the base manifests of `app1` directly (for quick development):**
+    ```bash
+    kubectl apply -k base/apps/app1
+    ```
+3.  **Apply the environment-specific overrides for `app1` (if any):**
+    ```bash
+    kubectl apply -k clusters/dev/services
+    ```
+4.  **Verify the deployments:**
+    ```bash
+    kubectl get pods -n default # or your app's namespace
+    ```
+
 ## Project Structure
 ```
 arkoifa/
